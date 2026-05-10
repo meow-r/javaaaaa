@@ -1,8 +1,10 @@
 package practice.ToDo.manager;
 
 import java.util.ArrayList;
-import java.util.Scanner;
+//import java.util.Scanner;
 import java.util.Iterator;
+import java.util.Collections;
+import java.util.Comparator;
 
 import practice.ToDo.model.Task;
 
@@ -27,8 +29,27 @@ public class TaskManager {
             System.out.println("任务列表为空");
             return;
         }
-        for (int i = 0; i < TaskList.size(); i ++){
+        /*for (int i = 0; i < TaskList.size(); i ++){
             System.out.println("["+(i+1)+"]: "+(TaskList.get(i)).toString());
+        }
+        System.out.println("当前未完成任务：" + numOfUncompletedTask + "个");*/
+        Collections.sort(TaskList);
+        for (int i = 0; i < TaskList.size(); i ++){
+            System.out.println("["+(i+1)+"]: "+(TaskList.get(i)).toString() + "优先级：" + TaskList.get(i).getPriority());
+        }
+        System.out.println("当前未完成任务：" + numOfUncompletedTask + "个");
+    }
+
+    public static void showTasksByTitle(){
+        if(TaskList.isEmpty()){
+            System.out.println("任务列表为空");
+            return;
+        }
+
+        Collections.sort(TaskList, Comparator.comparing(Task::getTitle));
+
+        for (int i = 0; i < TaskList.size(); i ++){
+            System.out.println("["+(i+1)+"]: "+(TaskList.get(i)).toString() + "优先级：" + TaskList.get(i).getPriority());
         }
         System.out.println("当前未完成任务：" + numOfUncompletedTask + "个");
     }
@@ -60,8 +81,8 @@ public class TaskManager {
         
     }
 
-
     public static void completeTask(int index){
+
         if(index >= 1 && index <= TaskList.size() && !TaskList.get(index-1).isCompleted()){
             System.out.println("完成任务"+"["+index+"]");
             TaskList.get(index-1).completeTask();
@@ -73,5 +94,23 @@ public class TaskManager {
         }
         System.out.println("无效任务");
         return;
+    }
+
+    public static void showTasksByStatusAndPriority(){
+        if (TaskList.isEmpty()) {
+        System.out.println("任务列表为空");
+        return;
+        }
+
+        Collections.sort(TaskList, 
+            Comparator.comparing(Task::isCompleted)
+                      .thenComparing(Task::getPriority)
+        );
+
+        for (int i = 0; i < TaskList.size(); i++) {
+        System.out.println("[" + (i + 1) + "]: " + TaskList.get(i).toString() 
+                           + " 优先级：" + TaskList.get(i).getPriority());
+        }
+        System.out.println("当前未完成任务：" + numOfUncompletedTask + "个");
     }
 }

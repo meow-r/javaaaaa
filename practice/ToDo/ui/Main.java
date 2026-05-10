@@ -4,25 +4,46 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 import practice.ToDo.manager.TaskManager;
-import practice.ToDo.model.DeadlineTask;
-import practice.ToDo.model.Task;
+import practice.ToDo.model.*;
 
 public class Main {
+    private enum VeiwMode{
+        BY_PRIORITY,
+        BY_TITLE,
+        BY_STATUS_PRIORITY
+    }
+
+
     public static void main(String args[]){
         Scanner scanner = new Scanner(System.in);
+        //boolean sortByTitle = false;
+        //boolean sortByStatusAndPriotiry = false;
+        VeiwMode current = VeiwMode.BY_PRIORITY;
+
         while (true) {
             System.out.println("\n=== 待办事项管理器 ===");
-            TaskManager.showTasks();
+            switch(current){
+                case BY_PRIORITY:
+                    TaskManager.showTasks();
+                    break;
+                case BY_STATUS_PRIORITY:
+                    TaskManager.showTasksByStatusAndPriority();
+                    break;
+                case BY_TITLE:
+                    TaskManager.showTasksByTitle();
+                    break;
+            }
             System.out.println("1. 添加任务");
-            System.out.println("2. 列出所有任务");
+            System.out.println("2. 按优先级列出所有任务");
             System.out.println("3. 完成任务");
             System.out.println("4. 删除已完成任务");
             System.out.println("5. 删除对应序号任务");
+            System.out.println("6. 按标题排序列出任务");
+            System.out.println("7. 综合排序");
             System.out.println("0. 退出");
             System.out.print("请选择：");
             int choice = scanner.nextInt();
             scanner.nextLine(); // 消耗换行
-
             switch (choice) {
                 case 1:
                     System.out.println("请选择任务类型：1.普通任务 2.截止任务");
@@ -32,7 +53,7 @@ public class Main {
                     String title = scanner.nextLine();
                     Task task = null;
                     if(type == 1){
-                        task = new Task(title);
+                        task = new SimpleTask(title);
                     }else if (type == 2){
                         System.out.println("请输入截止日期（yyyy-mm-dd）：");
                         LocalDate ddl = LocalDate.parse(scanner.nextLine());
@@ -42,7 +63,7 @@ public class Main {
                     break;
 
                 case 2:
-                    TaskManager.showTasks();
+                    current = VeiwMode.BY_PRIORITY;
                     break;
 
                 case 3:
@@ -85,6 +106,15 @@ public class Main {
                     }
                     break;
 
+
+                case 6:
+                    current = VeiwMode.BY_TITLE;
+                    break;
+
+                case 7:
+                    //sortByStatusAndPriotiry = true;
+                    current = VeiwMode.BY_STATUS_PRIORITY;
+                    break;
 
                 default:
                     System.out.println("无效输入");
